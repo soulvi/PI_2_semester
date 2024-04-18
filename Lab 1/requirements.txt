@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+transformers[torch]
+requests
+Pillow
+pydantic
+streamlit
+flake8==3.9.2
