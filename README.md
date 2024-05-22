@@ -8,12 +8,6 @@ https://timurgainutdinov1-team-pr-image-classification-streamlit-1fvl8t.streamli
 https://goo.su/TDcn
 ```
 
-## Команда:  
-
-Гайнутдинов Тимур Радикович (РИМ-130907)  
-
-Романова Виктория Борисовна (РИМ-130907)
-
 ## Выбранная модель: vit-base-patch16-224
 
 ## Описание модели
