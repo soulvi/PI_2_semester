@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import ViTImageProcessor, ViTForImageClassification
 import logging
+from requests.exceptions import RequestException
 
 # Configure logging
 logging.basicConfig(level=logging.INFO) 
@@ -89,3 +90,29 @@ def classify_image(request: ImageRequest):
     except Exception as e:
         logger.error("Unexpected error: %s", str(e))
         return {"error": f"Unexpected error: {str(e)}"}
+
+def load_image(url):
+    """
+    Function to load an image from a URL.
+    
+    Args:
+    - url (str): URL of the image.
+    
+    Returns:
+    - Image: PIL.Image object.
+    
+    Raises:
+    - RequestException: If there is an issue with the network request.
+    - IOError: If there is an issue loading the image.
+    """
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+        img = Image.open(response.raw)
+        return img
+    except RequestException as e:
+        logger.error("Network error occurred: %s", str(e))
+        raise
+    except IOError as e:
+        logger.error("IO error occurred: %s", str(e))
+        raise
