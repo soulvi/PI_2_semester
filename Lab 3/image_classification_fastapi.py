@@ -3,6 +3,11 @@ import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import ViTImageProcessor, ViTForImageClassification
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO) 
+logger = logging.getLogger(__name__)
 
 class ImageRequest(BaseModel):
     """
@@ -60,6 +65,7 @@ def root():
     """
     return {"message": "Welcome to the Image Classification API!"}
 
+
 @app.post("/classify-image", tags=["Image Classification"])
 def classify_image(request: ImageRequest):
     """
@@ -71,9 +77,15 @@ def classify_image(request: ImageRequest):
     Returns:
     - dict: Contains the classification result or an error message.
     """
+    logger.info("Received classification request for URL: %s", request.url)
     try:
         loaded_image = load_image(request.url)
         result = image_classification(loaded_image)
+        logger.info("Classification result: %s", result)
         return {"classification": result}
     except IOError as e:
+        logger.error("Failed to load image: %s", str(e))
         return {"error": f"Failed to load image: {str(e)}"}
+    except Exception as e:
+        logger.error("Unexpected error: %s", str(e))
+        return {"error": f"Unexpected error: {str(e)}"}
